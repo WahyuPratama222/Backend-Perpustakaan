@@ -20,6 +20,7 @@ import petugasRoutes from './routes/petugasRoutes.js';
 import peminjamanRoutes from './routes/peminjamanRoutes.js';
 import pengembalianRoutes from './routes/pengembalianRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
 dotenv.config();
 
@@ -40,6 +41,8 @@ app.use('/api/buku', bukuRoutes);
 app.use('/api/petugas', petugasRoutes);
 app.use('/api/peminjaman', peminjamanRoutes);
 app.use('/api/pengembalian', pengembalianRoutes);
+
+app.use(errorHandler);
 
 const PORT = process.env.SERVER_PORT || 5000;
 

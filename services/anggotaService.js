@@ -1,9 +1,9 @@
 import Anggota from "../models/Anggota.js";
+import { badRequestError, notFoundError, validationError } from "../utils/errorsUtil.js";
 import { validateId } from "../utils/validateIdUtil.js";
-import { createValidateAnggota, updateOptionalValidateAnggota, updateRequiredValidateAnggota} from "../validations/anggotaValidation.js";
+import { createValidateAnggota, updateOptionalValidateAnggota, updateRequiredValidateAnggota } from "../validations/anggotaValidation.js";
 
 const postAnggotaService = async (data) => {
-    // Mapping frontend key → DB key
     const anggotaData = {
         nama_anggota: data.nama_anggota,
         jenis_kelamin: data.jenis_kelamin,
@@ -13,35 +13,29 @@ const postAnggotaService = async (data) => {
         status_anggota: data.status_anggota,
     };
 
-    // Validasi DB-ready data
     const err = createValidateAnggota(anggotaData);
-    if (err) throw new Error(err);
+    if (err) throw validationError(err);
 
-    const anggota = await Anggota.create(anggotaData);
-    return anggota;
+    return await Anggota.create(anggotaData);
 };
 
-const getAnggotaService = async () => { 
-    const anggota = await Anggota.findAll();
-    return anggota;   
-}
+const getAnggotaService = async () => {
+    return await Anggota.findAll();
+};
 
 const getAnggotaByIdService = async (id) => {
-
     const errId = validateId(id);
-    if (errId) throw new Error(errId);
+    if (errId) throw badRequestError(errId);
 
     const anggota = await Anggota.findByPk(id);
-    if (!anggota) throw new Error("Anggota tidak ditemukan");
+    if (!anggota) throw notFoundError("Anggota tidak ditemukan");
 
     return anggota;
 };
 
 const putAnggotaService = async (data) => {
-    const { id } = data;
-
-    const errId = validateId(id);
-    if (errId) throw new Error(errId);
+    const errId = validateId(data.id);
+    if (errId) throw badRequestError(errId);
 
     const anggotaData = {
         nama_anggota: data.nama_anggota,
@@ -50,50 +44,48 @@ const putAnggotaService = async (data) => {
         no_telp: data.no_telp,
         email: data.email,
         status_anggota: data.status_anggota,
-    };    
-    
-    const anggota = await Anggota.findByPk(id);
-    if (!anggota) throw new Error("Anggota tidak ditemukan");
+    };
 
-    const errUpdate = updateRequiredValidateAnggota(anggotaData);
-    if (errUpdate) throw new Error(errUpdate);
+    const errBody = updateRequiredValidateAnggota(anggotaData);
+    if (errBody) throw validationError(errBody);
+
+    const anggota = await Anggota.findByPk(data.id);
+    if (!anggota) throw notFoundError("Anggota tidak ditemukan");
 
     await anggota.update(anggotaData);
 
     return anggota;
 };
 
-
 const patchAnggotaService = async (data) => {
-    const { id } = data;
+    const errId = validateId(data.id);
+    if (errId) throw badRequestError(errId);
 
-    const errId = validateId(id);
-    if (errId) throw new Error(errId);
+    const anggota = await Anggota.findByPk(data.id);
+    if (!anggota) throw notFoundError("Anggota tidak ditemukan");
 
-    const anggotaData = {
-        nama_anggota: data.nama_anggota,
-        jenis_kelamin: data.jenis_kelamin,
-        alamat: data.alamat,
-        no_telp: data.no_telp,
-        email: data.email,
-        status_anggota: data.status_anggota,
-    };
-
-    const anggota = await Anggota.findByPk(id);
-    if (!anggota) throw new Error("Anggota tidak ditemukan");
-
-    const err = updateOptionalValidateAnggota(anggotaData);
-    if (err) throw new Error(err);
+    const errBody = updateOptionalValidateAnggota(data);
+    if (errBody) throw validationError(errBody);
 
     const updateFields = {};
-    for (const key in anggotaData) {
-        if (anggotaData[key] !== undefined) {
-            updateFields[key] = anggotaData[key];
+
+    const allowedFields = [
+        "nama_anggota",
+        "jenis_kelamin",
+        "alamat",
+        "no_telp",
+        "email",
+        "status_anggota"
+    ];
+
+    for (const field of allowedFields) {
+        if (data[field] !== undefined) {
+            updateFields[field] = data[field];
         }
     }
 
     if (Object.keys(updateFields).length === 0) {
-        throw new Error("Tidak ada field yang diupdate");
+        throw badRequestError("Tidak ada field yang diupdate");
     }
 
     await anggota.update(updateFields);
@@ -102,14 +94,14 @@ const patchAnggotaService = async (data) => {
 
 const deleteAnggotaService = async (id) => {
     const errId = validateId(id);
-    if (errId) throw new Error(errId);
+    if (errId) throw badRequestError(errId);
 
-   const anggota = await Anggota.findByPk(id);
-    if (!anggota) throw new Error("Anggota tidak ditemukan");
+    const anggota = await Anggota.findByPk(id);
+    if (!anggota) throw notFoundError("Anggota tidak ditemukan");
 
-    await anggota.destroy(); // langsung hapus record ini
-
+    await anggota.destroy();
     return anggota;
 };
 
-export { postAnggotaService, getAnggotaService, getAnggotaByIdService,putAnggotaService, patchAnggotaService, deleteAnggotaService };
+
+export { postAnggotaService, getAnggotaService, getAnggotaByIdService, putAnggotaService, patchAnggotaService, deleteAnggotaService };

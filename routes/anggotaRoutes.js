@@ -3,11 +3,11 @@ import { getAllAnggota, getAnggotaById, patchAnggota, deleteAnggota, postAnggota
 
 const router = express.Router();
 
-router.post('/', postAnggota);         // POST /api/anggota
-router.get('/', getAllAnggota);          // GET /api/anggota
-router.get('/:id', getAnggotaById);      // GET /api/anggota/:id
-router.put('/:id', putAnggota);       // PUT /api/anggota/:id
+router.post('/', postAnggota);
+router.get('/', getAllAnggota);         
+router.get('/:id', getAnggotaById); 
+router.put('/:id', putAnggota);   
 router.patch('/:id', patchAnggota);
-router.delete('/:id', deleteAnggota);    // DELETE /api/anggota/:id
+router.delete('/:id', deleteAnggota);  
 
 export default router;

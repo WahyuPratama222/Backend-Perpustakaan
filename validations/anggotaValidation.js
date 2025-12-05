@@ -6,7 +6,7 @@ const createValidateAnggota = (data) => {
     const { nama_anggota, jenis_kelamin, email } = data;
 
     // Nama anggota wajib
-    const err = validateString(nama_anggota, "Nama anggota");
+    let err = validateString(nama_anggota, "Nama anggota");
     if (err) return err;
 
     // Jenis kelamin wajib dan harus Laki-laki/Perempuan

@@ -1,4 +1,4 @@
-import { validateInt, validateEnum } from "../utils/validateDataUtil";
+import { validateInt, validateEnum } from "../utils/validateDataUtil.js";
 
 const createValidatePengembalian = (data) => {
     const {id_peminjaman, id_petugas, status_buku} = data;

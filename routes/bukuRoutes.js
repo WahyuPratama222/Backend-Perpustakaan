@@ -1,12 +1,13 @@
 import express from 'express';
-import { createBuku, getAllBuku, getBukuById, updateBuku, deleteBuku } from '../controllers/bukuController.js';
+import { deleteBuku, getAllBuku, getBukuById, patchBuku, postBuku, putBuku } from '../controllers/bukuController.js';
 
 const router = express.Router();
 
-router.post('/buku', createBuku);
-router.get('/buku', getAllBuku);
-router.get('/buku/:id', getBukuById);
-router.put('/buku/:id', updateBuku);
-router.delete('/buku/:id', deleteBuku);
+router.post('/', postBuku);
+router.get('/', getAllBuku);         
+router.get('/:id', getBukuById); 
+router.put('/:id', putBuku);   
+router.patch('/:id', patchBuku);
+router.delete('/:id', deleteBuku);  
 
 export default router;

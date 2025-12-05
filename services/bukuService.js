@@ -1,6 +1,7 @@
 import Buku from "../models/Buku.js";
+import { badRequestError, notFoundError, validationError } from "../utils/errorsUtil.js";
 import { validateId } from "../utils/validateIdUtil.js";
-import { createValidateBuku, updateOptionalValidateBuku, updateRequiredValidateBuku } from "../validations/bukuValidation";
+import { createValidateBuku, updateOptionalValidateBuku, updateRequiredValidateBuku } from "../validations/bukuValidation.js";
 
 const postBukuService = async (data) => {
     const bukuData = {
@@ -11,35 +12,29 @@ const postBukuService = async (data) => {
         jumlah_buku: data.jumlah_buku
     };
 
-    const err = createValidateBuku(bukuData)
-    if (err) throw new Error(err);
+    const err = createValidateBuku(bukuData);
+    if (err) throw validationError(err);
 
-    const buku = await Buku.create(bukuData);
-    return buku;
+    return await Buku.create(bukuData);
 };
 
 const getBukuService = async () => {
-    const buku = await Buku.findAll();
-    return buku;
+    return await Buku.findAll();
 };
 
 const getBukuByIdService = async (id) => {
-
     const errId = validateId(id);
-    if (errId) throw new Error(errId);
+    if (errId) throw badRequestError(errId);
 
     const buku = await Buku.findByPk(id);
-    if (!buku) throw new Error("Buku tidak ditemukan");
+    if (!buku) throw notFoundError("Buku tidak ditemukan");
 
     return buku;
-}
+};
 
 const putBukuService = async (data) => {
-    const { id } = data;
-    
-    const errId = validateId(id);
-    if (errId) throw new Error(errId);
-
+    const errId = validateId(data.id);
+    if (errId) throw badRequestError(errId);
 
     const bukuData = {
         judul_buku: data.judul_buku,
@@ -49,49 +44,45 @@ const putBukuService = async (data) => {
         jumlah_buku: data.jumlah_buku
     };
 
-    const buku = await Buku.findByPk(id);
-    if (!buku) throw new Error("Buku tidak ditemukan");
+    const errBody = updateRequiredValidateBuku(bukuData);
+    if (errBody) throw validationError(errBody);
 
-    const errUpdate = updateRequiredValidateBuku(bukuData);
-    if (errUpdate) throw new Error(errUpdate);
+    const buku = await Buku.findByPk(data.id);
+    if (!buku) throw notFoundError("Buku tidak ditemukan");
 
     await buku.update(bukuData);
-
     return buku;
-    
 };
 
 const patchBukuService = async (data) => {
-    const { id } = data;
-    
-    const errId = validateId(id);
-    if (errId) throw new Error(errId);
+    const errId = validateId(data.id);
+    if (errId) throw badRequestError(errId);
 
+    const buku = await Buku.findByPk(data.id);
+    if (!buku) throw notFoundError("Buku tidak ditemukan");
 
-    const bukuData = {
-        judul_buku: data.judul_buku,
-        nama_penerbit: data.nama_penerbit,
-        nama_penulis: data.nama_penulis,
-        jumlah_halaman: data.jumlah_halaman,
-        jumlah_buku: data.jumlah_buku
-    };
-    
-    const buku = await Buku.findByPk(id);
-    if (!buku) throw new Error("Buku tidak ditemukan");
+    const errBody = updateOptionalValidateBuku(data);
+    if (errBody) throw validationError(errBody);
 
-    const err = updateOptionalValidateBuku(bukuData);
-    if (err) throw new Error(err);
+    const allowedFields = [
+        "judul_buku",
+        "nama_penerbit",
+        "nama_penulis",
+        "jumlah_halaman",
+        "jumlah_buku"
+    ];
 
     const updateFields = {};
-    for (const key in bukuData) {
-        if (bukuData[key] !== undefined) {
-            updateFields[key] = bukuData[key];
-        };
-    };
+
+    for (const field of allowedFields) {
+        if (data[field] !== undefined) {
+            updateFields[field] = data[field];
+        }
+    }
 
     if (Object.keys(updateFields).length === 0) {
-        throw new Error("Tidak ada field yang diupdate");
-    };
+        throw badRequestError("Tidak ada field yang diupdate");
+    }
 
     await buku.update(updateFields);
     return buku;
@@ -99,14 +90,14 @@ const patchBukuService = async (data) => {
 
 const deleteBukuService = async (id) => {
     const errId = validateId(id);
-    if (errId) throw new Error(errId);
+    if (errId) throw badRequestError(errId);
 
+    const buku = await Buku.findByPk(id);
+    if (!buku) throw notFoundError("Buku tidak ditemukan");
 
-   const buku = await Buku.findByPk(id);
-    if (!buku) throw new Error("Buku tidak ditemukan");
-
-    await buku.destroy(); 
+    await buku.destroy();
     return buku;
 };
 
-export {postBukuService, getBukuService, getBukuByIdService, putBukuService, patchBukuService, deleteBukuService}
+
+export { postBukuService, getBukuService, getBukuByIdService, putBukuService, patchBukuService, deleteBukuService };

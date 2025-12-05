@@ -1,4 +1,4 @@
-import { validateInt } from "./validateDataUtil";
+import { validateInt } from "./validateDataUtil.js";
 
 const validateCount = (data, fieldName, required = true) => {
     
