@@ -1,5 +1,5 @@
 import Anggota from "../models/Anggota.js";
-import { badRequestError, notFoundError, validationError } from "../utils/errorsUtil.js";
+import { badRequestError, notFoundError, validationError } from "../utils/errors/errorsUtil.js";
 import { validateId } from "../utils/validateIdUtil.js";
 import { createValidateAnggota, updateOptionalValidateAnggota, updateRequiredValidateAnggota } from "../validations/anggotaValidation.js";
 

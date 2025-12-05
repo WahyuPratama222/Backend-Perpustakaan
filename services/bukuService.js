@@ -1,5 +1,5 @@
 import Buku from "../models/Buku.js";
-import { badRequestError, notFoundError, validationError } from "../utils/errorsUtil.js";
+import { badRequestError, notFoundError, validationError } from "../utils/errors/errorsUtil.js";
 import { validateId } from "../utils/validateIdUtil.js";
 import { createValidateBuku, updateOptionalValidateBuku, updateRequiredValidateBuku } from "../validations/bukuValidation.js";
 

@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import Petugas from "../models/Petugas.js";
 import { createValidatePetugas, updateRequiredValidatePetugas, updateOptionalValidatePetugas } from "../validations/petugasValidation.js";
 import { validateId } from "../utils/validateIdUtil.js";
-import { badRequestError, notFoundError, validationError } from "../utils/errorsUtil.js";
+import { badRequestError, notFoundError, validationError } from "../utils/errors/errorsUtil.js";
 
 const postPetugasService = async (data) => {
     const err = createValidatePetugas(data);

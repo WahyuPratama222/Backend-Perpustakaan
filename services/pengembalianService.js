@@ -5,7 +5,7 @@ import Petugas from "../models/Petugas.js";
 import { createValidatePengembalian } from "../validations/pengembalianValidation.js";
 import sequelize from "../config/databases.js";
 import { validateId } from "../utils/validateIdUtil.js";
-import { badRequestError, notFoundError, validationError } from "../utils/errorsUtil.js";
+import { badRequestError, notFoundError, validationError } from "../utils/errors/errorsUtil.js";
 
 const postPengembalianService = async (data) => {
     const t = await sequelize.transaction();
