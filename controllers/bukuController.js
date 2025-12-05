@@ -1,94 +1,60 @@
-import Buku from '../models/Buku.js';
+import { getBukuService, postBukuService, getBukuByIdService, putBukuService, patchBukuService, deleteBukuService } from "../services/bukuService.js";
 
-//POST
+const postBuku = async(req, res, next) => {
+    try {
+        const newBuku = await postBukuService(req.body);
+        res.status(201).json(newBuku);
+    } catch (err) {
+        next(err);
+    };
+};
 
-const createBuku = async (req, res) => {
-    try{
-        const {judul_buku, nama_penulis, nama_penerbit, jumlah_halaman, jumlah_buku} = req.body;
-        const bukuBaru = await Buku.create({
-            judul_buku,
-            nama_penulis,
-            nama_penerbit,
-            jumlah_halaman,
-            jumlah_buku,
-        });
-        res.status(201).json(bukuBaru);
-    } catch (error) {
-        res.status(500).json({message: error.message})
+const getAllBuku = async (req, res, next) => {
+    try {
+        const allBuku = await getBukuService();
+        res.status(200).json(allBuku);
+    } catch (err) {
+        next(err);
     }
 };
 
-//GET (READ ALL)
-
-const getAllBuku = async (req, res) => {
-  try {
-    const semuaBuku = await Buku.findAll();
-    res.status(200).json(semuaBuku);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-
-//GET (READ BY ID)
-
-const getBukuById = async (req, res) => {
-  try {
-    const { id } = req.params; // ambil id dari URL
-    const buku = await Buku.findByPk(id);
-
-    if (!buku) {
-      return res.status(404).json({ message: "Buku tidak ditemukan" });
+const getBukuById = async (req, res, next) => {
+    try {
+        const buku = await getBukuByIdService(req.params.id);
+        res.status(200).json(buku);
+    } catch (err) {
+        next(err);
     }
-
-    res.status(200).json(buku);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
 };
 
-//PUT (UPDATE BY ID)
-
-const updateBuku = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { judul_buku, nama_penulis, nama_penerbit, jumlah_halaman, jumlah_buku } = req.body;
-
-    const buku = await Buku.findByPk(id);
-    if (!buku) {
-      return res.status(404).json({ message: "Buku tidak ditemukan" });
+const putBuku = async (req, res, next) => {
+    try {
+        const data = { ...req.body, id: req.params.id };
+        const updated = await putBukuService(data);
+        res.status(200).json(updated);
+    } catch (err) {
+        next(err);
     }
-
-    buku.judul_buku = judul_buku || buku.judul_buku;
-    buku.nama_penulis = nama_penulis || buku.nama_penulis;
-    buku.nama_penerbit = nama_penerbit || buku.nama_penerbit;
-    buku.jumlah_halaman = jumlah_halaman || buku.jumlah_halaman;
-    buku.jumlah_buku = jumlah_buku || buku.jumlah_buku;
-
-    await buku.save();
-    res.status(200).json(buku);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
 };
 
-//DELETE (DELETE BY ID)
-
-const deleteBuku = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const buku = await Buku.findByPk(id);
-
-    if (!buku) {
-      return res.status(404).json({ message: "Buku tidak ditemukan" });
+const patchBuku = async (req, res, next) => {
+    try {
+        const data = { ...req.body, id: req.params.id };
+        const updated = await patchBukuService(data);
+        res.status(200).json(updated);
+    } catch (err) {
+        next(err);
     }
-
-    await buku.destroy();
-    res.status(200).json({ message: "Buku berhasil dihapus" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
 };
 
-export { createBuku, getAllBuku, getBukuById, updateBuku, deleteBuku};
+const deleteBuku = async (req, res, next) => {
+    try {
+        const buku = await deleteBukuService(req.params.id);
+        res.status(200).json(buku);
+    } catch (err) {
+        next(err);
+    }
+};
+
+export { postBuku, getAllBuku, getBukuById, putBuku, patchBuku, deleteBuku };
 

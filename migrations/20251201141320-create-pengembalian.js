@@ -13,7 +13,7 @@ module.exports = {
       id_peminjaman: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true, // sesuai model runtime
+        unique: true,
         references: {
           model: 'peminjaman',
           key: 'id_peminjaman'

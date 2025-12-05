@@ -37,4 +37,4 @@ module.exports = {
     await queryInterface.dropTable('buku');
   }
 };
-;
+

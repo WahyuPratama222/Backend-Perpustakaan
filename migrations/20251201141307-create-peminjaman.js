@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'buku',   // tabel target
+          model: 'buku',
           key: 'id_buku'
         },
         onUpdate: 'CASCADE',
@@ -40,10 +40,19 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      tanggal_pinjam: {
+      tanggal_peminjaman: {
         type: Sequelize.DATEONLY,
         allowNull: false,
         defaultValue: Sequelize.NOW
+      },
+      status_pinjam: {
+        type: Sequelize.ENUM('Dipinjam' , 'Dikembalikan'),
+        allowNull:true,
+        defaultValue: 'Dipinjam'
+      },
+      tanggal_pengembalian: {
+        type: Sequelize.DATEONLY,
+        allowNull:true
       }
     });
   },

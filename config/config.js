@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+// ===== Runtime untuk Sequelize CLI =====
+
 export default {
   development: {
     username: process.env.DB_USER,

@@ -1,11 +1,11 @@
 import express from 'express';
-import { createPeminjaman, getAllPeminjaman, getPeminjamanById, deletePeminjaman } from '../controllers/peminjamanController.js';
+import { deletePeminjaman, getAllPeminjaman, getPeminjamanById, postPeminjaman } from '../controllers/peminjamanController.js';
 
 const router = express.Router();
 
-router.post('/peminjaman', createPeminjaman);
-router.get('/peminjaman', getAllPeminjaman);
-router.get('/peminjaman/:id', getPeminjamanById);
-router.delete('/peminjaman/:id', deletePeminjaman);
+router.post('/', postPeminjaman);
+router.get('/', getAllPeminjaman);         
+router.get('/:id', getPeminjamanById); 
+router.delete('/:id', deletePeminjaman);  
 
 export default router;
