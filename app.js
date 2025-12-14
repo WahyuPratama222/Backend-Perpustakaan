@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 
 import "./models/Anggota.js";
 import "./models/Buku.js";
@@ -16,8 +15,6 @@ import peminjamanRoutes from "./routes/peminjamanRoutes.js";
 import pengembalianRoutes from "./routes/pengembalianRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
-
-dotenv.config();
 
 const app = express();
 
