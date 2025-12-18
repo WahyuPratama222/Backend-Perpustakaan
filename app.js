@@ -16,7 +16,7 @@ import pengembalianRoutes from "./routes/pengembalianRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
-import { specs, swaggerUi } from './config/swagger.js';
+import { specs, swaggerUi } from "./config/swagger.js";
 
 const app = express();
 
@@ -39,10 +39,14 @@ app.use("/api/peminjaman", peminjamanRoutes);
 app.use("/api/pengembalian", pengembalianRoutes);
 
 // Swagger Documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'API Perpustakaan Docs'
-}));
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, {
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "API Perpustakaan Docs",
+  })
+);
 
 app.use(errorHandler);
 
